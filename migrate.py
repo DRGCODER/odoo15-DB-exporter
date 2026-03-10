@@ -12,7 +12,7 @@ import json
 import os
 import re
 import sys
-from datetime import date, datetime
+from datetime import datetime, date
 from decimal import Decimal
 from pathlib import Path
 
@@ -92,22 +92,6 @@ def fetch_messages(conn, model_name, record_ids):
         cr.execute(query, {"model_name": model_name, "record_ids": record_ids})
         return list(cr.fetchall())
 
-
-def fetch_attachments(conn, model_name, record_ids):
-    if not record_ids:
-        return []
-    query = """
-        SELECT id, name, mimetype, res_id, res_model, store_fname, file_size, datas
-        FROM ir_attachment
-        WHERE res_model = %(model_name)s
-          AND res_id = ANY(%(record_ids)s)
-        ORDER BY res_id, id
-    """
-    with conn.cursor() as cr:
-        cr.execute(query, {"model_name": model_name, "record_ids": record_ids})
-        return list(cr.fetchall())
-
-
 def serialize_value(val):
     if val is None:
         return ""
@@ -169,13 +153,10 @@ def run_export(profile, output_dir):
             print("  Found %d child '%s' records" % (len(child_rows), child["key"]))
 
         all_messages = []
-        all_attachments = []
         for model_name, ids in all_model_ids:
             msgs = fetch_messages(conn, model_name, ids)
-            atts = fetch_attachments(conn, model_name, ids)
             all_messages.extend(msgs)
-            all_attachments.extend(atts)
-            print("  [%s] %d messages, %d attachments" % (model_name, len(msgs), len(atts)))
+            print("  [%s] %d messages" % (model_name, len(msgs)))
 
     finally:
         conn.close()
@@ -190,7 +171,6 @@ def run_export(profile, output_dir):
         write_csv(output_dir, "%s_%s.csv" % (profile_name, key), all_children.get(key, []))
 
     write_csv(output_dir, "%s_messages.csv" % profile_name, all_messages)
-    write_csv(output_dir, "%s_attachments.csv" % profile_name, all_attachments)
 
     print("\nDone.")
 
@@ -202,9 +182,6 @@ def main():
         description="Export Odoo 15 data to CSV files for migration.",
     )
     parser.add_argument("--profile", help="Profile name from sync_profiles.json")
-    parser.add_argument("--from-id", type=int, default=None, help="Start from this record ID (inclusive)")
-    parser.add_argument("--to-id", type=int, default=None, help="End at this record ID (inclusive)")
-    parser.add_argument("--limit", type=int, default=10000, help="Max records per batch (default: 10000)")
     parser.add_argument("--output-dir", default="./export", help="Output directory (default: ./export)")
     parser.add_argument("--list-profiles", action="store_true", help="List available profiles and exit")
     args = parser.parse_args()

@@ -9,12 +9,6 @@
         "table": "mail_message",
         "model": "mail.message",
         "parent_field": "model_id"
-      },
-      {
-        "key": "attachments",
-        "table": "ir_attachment",
-        "model": "ir.attachment",
-        "parent_field": "res_id"
       }
     ]
   },
@@ -28,12 +22,6 @@
         "table": "mail_message",
         "model": "mail.message",
         "parent_field": "model_id"
-      },
-      {
-        "key": "attachments",
-        "table": "ir_attachment",
-        "model": "ir.attachment",
-        "parent_field": "res_id"
       }
     ]
   },
@@ -47,12 +35,6 @@
         "table": "mail_message",
         "model": "mail.message",
         "parent_field": "model_id"
-      },
-      {
-        "key": "attachments",
-        "table": "ir_attachment",
-        "model": "ir.attachment",
-        "parent_field": "res_id"
       }
     ]
   }
