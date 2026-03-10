@@ -3,39 +3,18 @@
     "name": "maintenance_approval",
     "table": "abraj_maintenance_cost_project",
     "model": "abraj.maintenance.cost.project",
-    "children": [
-      {
-        "key": "messages",
-        "table": "mail_message",
-        "model": "mail.message",
-        "parent_field": "model_id"
-      }
-    ]
+    "children": []
   },
   {
     "name": "fiber_overtime",
-    "table": "fiber_overtime",
-    "model": "fiber.overtime",
-    "children": [
-      {
-        "key": "messages",
-        "table": "mail_message",
-        "model": "mail.message",
-        "parent_field": "model_id"
-      }
-    ]
+    "table": "fiber_overtime_approval",
+    "model": "fiber.overtime.approval",
+    "children": []
   },
   {
     "name": "overtime_approval",
     "table": "project_abraj_overtime_approval",
     "model": "project.abraj.overtime.approval",
-    "children": [
-      {
-        "key": "messages",
-        "table": "mail_message",
-        "model": "mail.message",
-        "parent_field": "model_id"
-      }
-    ]
+    "children": []
   }
 ]
