@@ -33,14 +33,23 @@ def validate_identifier(name):
 
 
 def get_connection():
-    return psycopg2.connect(
-        host=os.environ["ODOO15_DB_HOST"],
-        port=int(os.environ.get("ODOO15_DB_PORT", 5432)),
-        dbname=os.environ["ODOO15_DB_NAME"],
-        user=os.environ["ODOO15_DB_USER"],
-        password=os.environ["ODOO15_DB_PASSWORD"],
-        cursor_factory=RealDictCursor,
-    )
+    params = {
+        "dbname": os.environ["ODOO15_DB_NAME"],
+        "cursor_factory": RealDictCursor,
+    }
+    host = os.environ.get("ODOO15_DB_HOST")
+    if host:
+        params["host"] = host
+    port = os.environ.get("ODOO15_DB_PORT")
+    if port:
+        params["port"] = int(port)
+    user = os.environ.get("ODOO15_DB_USER")
+    if user:
+        params["user"] = user
+    password = os.environ.get("ODOO15_DB_PASSWORD")
+    if password:
+        params["password"] = password
+    return psycopg2.connect(**params)
 
 
 def load_profiles():
